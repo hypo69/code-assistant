@@ -2,14 +2,22 @@
   "role": "doc_writer_md",
   "lang": "EN",
   "model": [ "gemini" ],
-  "start_dirs": [ "endpoints\\ai_games\\101_basic_computer_games\\ru" ],
-  "gemini_generation_config": {
-    "response_mime_type": "text/plain"
-  },
-  "gemini_model_name": "gemini-2.0-flash-exp",
-  "openai_model_name": "gpt-4o-mini",
-  "openai_assistant_id": "<OpenAI Assistant ID>",
+  "start_dir": "C:\\Users\\user\\Documents\\repos\\public_repositories\\code-assistant",
+  "docs_dir": "C:\\Users\\user\\Documents\\repos\\public_repositories\\code-assistant\\docs",
 
+  "gemini": {
+    "model_name": "gemini-2.0-flash-exp",
+    "avaible_models": [
+      "gemini-2.0-flash-exp",
+      "gemini-1.5-flash-8b-exp-0924",
+      "gemini-1.5-flash",
+      "gemini-1.5-flash-8b"
+    ],
+
+    "generation_config": {
+      "response_mime_type": "text/plain"
+    }
+  },
   "exclude_dirs": [
     ".ipynb_checkpoints",
     "resources",
@@ -39,7 +47,6 @@
     "more_basic_computer_games",
     "Understanding_Mathematics_And_Logic_Using_BASIC_Computer_Games",
     "projecteuler"
-
   ],
   "exclude_files": [
     "version.py",
@@ -56,7 +63,6 @@
     "*.cfg",
     "*.git*"
   ],
-
   "exclude_file_patterns": [
     ".*\\(.*\\).*",
     "___{3,}.*",
@@ -73,7 +79,6 @@
     "*.txt",
     "*.md",
     "*.rst",
-
     "Makefile",
     "LICENSE*",
     "CHANGELOG*",
@@ -111,24 +116,18 @@
     "```PALINTEXT",
     "```HTML"
   ],
-
   "output_directory": {
-    "code_checker_md": "<model>/<lang>/consultant/src",
-    "code_explainer_md": "<model>/<lang>/explainer/src",
-    "code_explainer_html": "<model>/<lang>explainer/html/src",
-    "doc_writer_md": "<model>/<lang>/doc/src",
-    "pytest": "../pytest/<model>/src",
-    "doc_writer_rst": "<model>/<lang>/doc/rst/src",
-    "doc_writer_html": "<model>/<lang>/doc/html/src",
-    "how_to_writer": "<model>/<lang>/how_to/src"
+    "code_checker": "consultant",
+    "code_explainer": "explainer",
+    "doc_writer": "doc",
+    "how_to_writer": "how_to",
+    "pytest": "pytest"
   },
-
   "roles": [
-    "code_checker_md",
-    "code_explainer_md",
-    "doc_writer_md",
-
-    "how_to_writer_md"
+    "code_checker",
+    "code_explainer",
+    "doc_writer",
+    "how_to_writer"
   ],
   "exclude-roles": [
     "code_explainer_html",
@@ -136,7 +135,5 @@
     "doc_writer_rst",
     "pytest"
   ],
-  "languages": ["ru", "en" ]
-
-
+  "languages": [ "ru", "en" ]
 }

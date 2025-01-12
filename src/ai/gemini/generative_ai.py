@@ -162,7 +162,6 @@ class GoogleGenerativeAI:
                 return response_text
 
             except requests.exceptions.RequestException as ex:
-                timeout = 1200
                 max_attempts = 5
                 if attempt > max_attempts:
                     break
@@ -171,7 +170,7 @@ class GoogleGenerativeAI:
                     ex,
                     False,
                 )
-                time.sleep(timeout)
+                time.sleep(1200)
                 continue  # Повторить попытку
             except (GatewayTimeout, ServiceUnavailable) as ex:
                 logger.error("Service unavailable:", ex, False)
@@ -179,16 +178,15 @@ class GoogleGenerativeAI:
                 max_attempts = 3
                 if attempt > max_attempts:
                     break
-                time.sleep(2**attempt)
+                time.sleep(2**attempt + 10)
                 continue
             except ResourceExhausted as ex:
-                timeout = 10800
                 logger.debug(
                     f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",
                     ex,
                     False,
                 )
-                time.sleep(timeout)
+                time.sleep(10800)
                 continue
             except (DefaultCredentialsError, RefreshError) as ex:
                 logger.error("Authentication error:", ex, False)

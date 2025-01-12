@@ -8,9 +8,14 @@ from __future__ import annotations
 .. module:: header
 	:platform: Windows, Unix
 	:synopsys: Модуль автодoкументации на основе модели gemini
-"""	
+"""
+
 import header
 
 from src.assistant import CodeAssistant
 
-a = CodeAssistant()
+role = 'doc_writer'
+lang = 'en'
+
+a = CodeAssistant(role = role, lang = lang)
+a.run()

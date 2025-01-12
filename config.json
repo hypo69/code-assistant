@@ -10,14 +10,8 @@
   },
   "credentials": {
     "gemini": {
-      "model_name": "gemini-2.0-flash-exp",
-      "avaible_maodels": [
-        "gemini-2.0-flash-exp",
-        "gemini-1.5-flash-8b-exp-0924",
-        "gemini-1.5-flash",
-        "gemini-1.5-flash-8b"
-      ],
-      "api_key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+     
+      "api_key": "AIzaSyATzEjS5-C-YguhlyReXgEQmQy5U3vnXmM"
     }
   },
   "fast_api": {
