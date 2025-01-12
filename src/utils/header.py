@@ -1,10 +1,10 @@
-## \file header.py
+## \file vercel_simple_gemini_chatbot/app/src/header.py
 # -*- coding: utf-8 -*-
 
 #! venv/bin/python/python3.12
 
 """
-.. module:: header
+.. module:: app.vercel_simple_gemini_chatbot.app.src 
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
 """

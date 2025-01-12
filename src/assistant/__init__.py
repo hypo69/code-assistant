@@ -10,3 +10,4 @@
 
 """
 
+from .code_assistant import CodeAssistant

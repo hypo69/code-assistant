@@ -1,6 +1,5 @@
-## \file /src/endpoints/hypo69/code_assistant/assistant.py
+## \file /src/code_assistant/assistant.py
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
 """
 Модуль обучения модели машинного обучения кодовой базе, составления документации к проекту, примеров кода и тестов
