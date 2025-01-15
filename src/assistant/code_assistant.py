@@ -111,7 +111,7 @@ class CodeAssistant:
                             start_dir:Optional[str | Path | list[str,str] | list[str,Path]] = None, 
                             docs_dir:Optional[str | Path] = None, ) -> bool:
         """компиляция, отправка запроса и сохранение результата."""
-        flag = 'read_and_clear'
+        flag = 'read_and_start_new'
         try:
             if not start_dir:
                 start_dir = self.config.start_dir

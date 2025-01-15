@@ -140,5 +140,5 @@
     "doc_writer_rst",
     "pytest"
   ],
-  "languages": [ "ru" ]
+  "languages": [ "en","ru" ]
 }
