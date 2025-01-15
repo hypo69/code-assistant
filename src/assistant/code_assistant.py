@@ -1,6 +1,6 @@
 import asyncio
 import argparse
-import sys
+import sys, os
 from pathlib import Path
 from typing import Iterator, List, Optional
 from types import SimpleNamespace
@@ -8,6 +8,7 @@ import signal
 import time
 import re
 import fnmatch
+from dotenv import load_dotenv
 
 import header
 from header import __root__
@@ -19,6 +20,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
+load_dotenv()
 
 def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
     """
@@ -68,10 +70,10 @@ class CodeAssistant:
             self.role = role 
             self.lang = lang
             self.models_list = kwargs.get("model", ["gemini"])
-            
+            self.config.docs_dir = self.config.docs_dir.replace('<lang>',self.lang)
             self.translations = j_loads_ns(  BASE_PATH / 'translations'  / 'translations.json' )
-            self.system_instruction = Path( BASE_PATH / 'instructions' / 'CODE_RULES.MD').read_text(encoding="UTF-8")
-            self.code_instruction = Path( BASE_PATH / 'instructions' / f'{self.role}_{self.lang}.md').read_text(encoding="UTF-8")
+            self.system_instruction = Path( BASE_PATH / 'instructions' / f'CODE_RULES.{self.lang}.MD').read_text(encoding="UTF-8")
+            self.code_instruction = Path( BASE_PATH / 'instructions' / f'{self.role}.{self.lang}.md').read_text(encoding="UTF-8")
             self._initialize_models(**kwargs)
         except Exception as e:
             logger.error(f"Ошибка при инициализации CodeAssistant: {e}")
@@ -83,7 +85,7 @@ class CodeAssistant:
             if "gemini" in self.models_list:
                 self.gemini_model = GoogleGenerativeAI(
                     model_name = self.config.gemini.model_name,
-                    api_key = gs.credentials.gemini.api_key,
+                    api_key = os.getenv('GEMINI_API') ,
                     system_instruction = self.system_instruction,
                     **kwargs,
                 )
@@ -98,8 +100,8 @@ class CodeAssistant:
         except Exception as ex:
             logger.error(f"Exception in `remove_outer_quotes()`: {ex}")
             return ''
-        if response.startswith(('```python', '```mermaid')):
-            return response
+        # if response.startswith(('```python', '```mermaid')):
+        #     return response
         for prefix in self.config.remove_prefixes:
             if response.lower().startswith(prefix.lower()):
                 return response.removeprefix(prefix).removesuffix("```").strip()
@@ -109,6 +111,7 @@ class CodeAssistant:
                             start_dir:Optional[str | Path | list[str,str] | list[str,Path]] = None, 
                             docs_dir:Optional[str | Path] = None, ) -> bool:
         """компиляция, отправка запроса и сохранение результата."""
+        flag = 'read_and_clear'
         try:
             if not start_dir:
                 start_dir = self.config.start_dir
@@ -129,8 +132,11 @@ class CodeAssistant:
                         continue
                     if file_path and content:
                         try:
-                           content_request = self._create_request(file_path, content)
-                           response = await self.gemini_model.ask(content_request)
+                            chat_data_folder = f'{self.config.docs_dir}/{self.role}/chat_history'
+                            content_request = self._create_request(file_path, content)
+                            
+                            response = await self.gemini_model.chat(content_request, chat_data_folder, flag = flag)
+                            flag = 'save_chat'
                         except Exception as e:
                              logger.error(f"Ошибка при запросе к модели: {e}")
                              continue
@@ -216,11 +222,10 @@ class CodeAssistant:
     async def _save_response(self, file_path: Path, response: str, model_name: str) -> None:
         """Сохранение ответа модели в файл с добавлением суффикса."""
         try:
-
             file_path = str(file_path).replace(str(self.config.start_dir), f'{self.config.docs_dir}/{self.role}')
 
             suffix =  '.md'  # По умолчанию используется .md
-            export_path = Path(f"{file_path}{suffix}")
+            export_path = Path(f"{file_path}{suffix}") if self.config.save_as_md else Path(file_path)
             export_path.parent.mkdir(parents=True, exist_ok=True)
             export_path.write_text(response, encoding='utf-8')
             print(f'Ответ модели сохранен в: {export_path}', text_color='green')

@@ -2,8 +2,8 @@
   "role": "doc_writer_md",
   "lang": "EN",
   "model": [ "gemini" ],
-  "start_dir": "C:\\Users\\user\\Documents\\repos\\public_repositories\\code-assistant",
-  "docs_dir": "C:\\Users\\user\\Documents\\repos\\public_repositories\\code-assistant\\docs",
+  "start_dir": "C:\\Users\\user\\Documents\\repos\\public_repositories\\fast-api-server\\src\\fast_api",
+  "docs_dir": "C:\\Users\\user\\Documents\\repos\\public_repositories\\fast-api-server\\doc\\<lang>",
 
   "gemini": {
     "model_name": "gemini-2.0-flash-exp",
@@ -91,9 +91,12 @@
     "```md\n",
     "```markdown",
     "```markdown\n",
+    "```python",
+    "```python\n",
     "```",
     "```\n"
   ],
+  "save_as_md": true,
   "known_prefixes": [
     " --------------------------- DEPRECTAED KEY --------------",
     "```md",
@@ -124,16 +127,18 @@
     "pytest": "pytest"
   },
   "roles": [
-    "code_checker",
     "code_explainer",
+    "code_checker",
     "doc_writer",
     "how_to_writer"
   ],
+
   "exclude-roles": [
+    "code_translator",
     "code_explainer_html",
     "doc_writer_html",
     "doc_writer_rst",
     "pytest"
   ],
-  "languages": [ "ru", "en" ]
+  "languages": [ "ru" ]
 }

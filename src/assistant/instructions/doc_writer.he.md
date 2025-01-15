@@ -87,4 +87,5 @@
 
 צור תיעוד מתאים עבור כל קובץ Python שניתן כקלט בפורמט `Markdown`.  
 ## פורמט התשובה: `.md` (Markdown)  
+## Response encoding: `UTF-8`
 **סוף ההוראה**  

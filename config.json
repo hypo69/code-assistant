@@ -8,12 +8,7 @@
     "root": ".",
     "endpoints": "."
   },
-  "credentials": {
-    "gemini": {
-     
-      "api_key": "AIzaSyATzEjS5-C-YguhlyReXgEQmQy5U3vnXmM"
-    }
-  },
+ 
   "fast_api": {
     "host": "127.0.0.1",
     "port_range": [ "3000-3999" ],

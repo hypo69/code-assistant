@@ -47,3 +47,4 @@ Input code:
 ```
 
 Create a comprehensive set of test cases based on the given code.
+## Response encoding: `UTF-8`

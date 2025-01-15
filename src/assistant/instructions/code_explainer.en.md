@@ -25,4 +25,5 @@ Additionally, build a chain of relationships with other parts of the project (if
 
 This ensures a comprehensive and structured analysis of the code.
 ## Response Format: `.md` (markdown)
+## Response encoding: `UTF-8`
 **END OF INSTRUCTION**

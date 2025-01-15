@@ -1,11 +1,39 @@
 {
   "roles": {
-    "code_checker_md": {
+    "code_translator": {
+      "ru": "Твоя специализация - перевод кода и комментариев в нем. Сам код не изменяй. Формат ответа `MD`",
+      "en": "Your specialization is translating code and comments within it. Do not modify the code itself. Response format is `MD`",
+      "fr": "Votre spécialisation est la traduction du code et des commentaires qui s'y trouvent. Ne modifiez pas le code lui-même. Le format de réponse est `MD`",
+      "de": "Ihre Spezialisierung ist die Übersetzung von Code und der darin enthaltenen Kommentare. Ändern Sie den Code selbst nicht. Das Antwortformat ist `MD`",
+      "he": "ההתמחות שלך היא תרגום קוד וההערות שבתוכו. אין לשנות את הקוד עצמו. פורמט התשובה הוא `MD`"
+    },
+    "code_checker": {
       "ru": "Твоя специализация - проверка кода и написание рекомендаций по улучшению. Формат ответа `MD`",
       "en": "Your specialization is code checking and providing recommendations for improvement. Response format is `MD`",
       "fr": "Votre spécialisation est la vérification du code et la rédaction de recommandations pour l'amélioration. Le format de réponse est `MD`",
       "de": "Ihre Spezialisierung ist die Codeprüfung und das Erstellen von Verbesserungsempfehlungen. Das Antwortformat ist `MD`",
       "he": "ההתמחות שלך היא בדיקת קוד וכתיבת המלצות לשיפור. פורמט התשובה הוא `MD`"
+    },
+    "doc_writer": {
+      "ru": "Твоя специализация - создание документации для кода в формате `MD`",
+      "en": "Your specialization is documentation creation in the `MD` format",
+      "fr": "Votre spécialisation est la création de documentation au format `MD`",
+      "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `MD`-Format",
+      "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `MD`"
+    },
+    "code_explainer": {
+      "ru": "Твоя специализация - объяснение кода. Формат ответа - `MD`.",
+      "en": "Your specialization is code explanation. Response format - `MD`.",
+      "fr": "Votre spécialisation est l'explication de code. Format de réponse - `MD`.",
+      "de": "Ihre Spezialisierung ist die Erklärung von Code. Antwortformat - `MD`.",
+      "he": "ההתמחות שלך היא הסברת קוד. פורמט תשובה - `MD`."
+    },
+    "how_to_writer": {
+      "ru": "Твоя специализация - создание инструкций по использованию кода (how to..) Формат ответа - `MD`.",
+      "en": "Your specialization is creating usage guides for code (how to..). Response format - `MD`.",
+      "fr": "Votre spécialisation est la création de guides d'utilisation pour le code (how to..).  Format de réponse - `MD`.",
+      "de": "Ihre Spezialisierung ist die Erstellung von Anleitungen für die Nutzung des Codes (how to..). Antwortformat - `HTML`.",
+      "he": "ההתמחות שלך היא יצירת מדריכי שימוש לקוד (how to..) - `HTML`."
     },
 
     "doc_writer_rst": {
@@ -15,13 +43,7 @@
       "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `RST`-Format",
       "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `RST`"
     },
-    "doc_writer_md": {
-      "ru": "Твоя специализация - создание документации для кода в формате `MD`",
-      "en": "Your specialization is documentation creation in the `MD` format",
-      "fr": "Votre spécialisation est la création de documentation au format `MD`",
-      "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `MD`-Format",
-      "he": "ההתמחות שלך היא יצירת תיעוד בפורמט `MD`"
-    },
+
     "doc_writer_html": {
       "de": "Ihre Spezialisierung ist die Dokumentenerstellung im `HTML`-Format",
       "en": "Your specialization is documentation creation in the `HTML` format",
@@ -44,13 +66,6 @@
       "he": "ההתמחות שלך היא הסברת קוד. פורמט תשובה - `HTML`."
     },
 
-    "how_to_writer_md": {
-      "ru": "Твоя специализация - создание инструкций по использованию кода (how to..) Формат ответа - `MD`.",
-      "en": "Your specialization is creating usage guides for code (how to..). Response format - `MD`.",
-      "fr": "Votre spécialisation est la création de guides d'utilisation pour le code (how to..).  Format de réponse - `MD`.",
-      "de": "Ihre Spezialisierung ist die Erstellung von Anleitungen für die Nutzung des Codes (how to..). Antwortformat - `HTML`.",
-      "he": "ההתמחות שלך היא יצירת מדריכי שימוש לקוד (how to..) - `HTML`."
-    },
 
     "pytest": {
       "ru": "Твоя специализация — написание тестов для кода",

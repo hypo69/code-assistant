@@ -88,4 +88,5 @@ The documentation must meet the following requirements:
 
 Generate the corresponding documentation for each input Python file in `Markdown` format.
 ## Response format: `.md` (markdown)
+## Response encoding: `UTF-8`
 # END OF INSTRUCTION

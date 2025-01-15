@@ -29,6 +29,6 @@ Usage example
 
     [Example usage code]
 ```
-
+## Response encoding: `UTF-8`
 4. **Avoid vague terms** like "getting" or "doing." Be specific about what the code does, e.g., "checks," "validates," or "sends."
 

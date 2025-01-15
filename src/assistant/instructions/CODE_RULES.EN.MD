@@ -112,3 +112,4 @@ Each response should include the following sections:
 
 - **Changes**:
 <A detailed list of all modifications, including explanations and justifications.>
+## Response encoding: `UTF-8`

@@ -11,11 +11,22 @@ from __future__ import annotations
 """
 
 import header
+from header import __root__
 
 from src.assistant import CodeAssistant
+from src.utils.jjson import j_loads_ns
 
 role = 'doc_writer'
 lang = 'en'
 
-a = CodeAssistant(role = role, lang = lang)
-a.run()
+
+config = j_loads_ns(__root__ / 'src' / 'assistant' / 'code_assistant.json')
+
+for lang in config.languages:
+	for role in config.roles:
+		a = CodeAssistant(role = role, lang = lang)
+		a.run()
+
+# for role in config.roles:
+# 	a = CodeAssistant(role = role, lang = 'he')
+# 	a.run()

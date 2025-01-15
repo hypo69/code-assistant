@@ -1,13 +1,14 @@
+## \file src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
 
 """
-.. module::  src.ai.gemini
+.. module::  src.ai.gemini.generative_ai
    :platform: Windows, Unix
    :synopsis: Google generative AI integration
    https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai.md
 """
+import codecs
 import re
 import asyncio
 import time
@@ -43,6 +44,15 @@ from src.utils.printer import pprint as print
 
 timeout_check = TimeoutCheck()
 
+def normalize_text(text):
+    # Декодируем все Unicode escape-последовательности
+    text = codecs.decode(text, 'unicode_escape')
+    
+    # Заменяем escape-последовательности HTML, если необходимо (например, <br>)
+    text = re.sub(r'\\n', '\n', text)  # Заменяем \n на настоящий символ новой строки
+
+    return text
+
 def remove_html_blocks(text: str) -> str:
     """
     Удаляет блоки текста, которые начинаются с '```html' и заканчиваются на '```' или '```\n'.
@@ -54,7 +64,6 @@ def remove_html_blocks(text: str) -> str:
         str: Текст без блоков '```html'.
     """
     return re.sub(r'```html.*?```', '', text, flags=re.DOTALL)
-
 
 @dataclass
 class GoogleGenerativeAI:
@@ -99,41 +108,116 @@ class GoogleGenerativeAI:
         )
         self._chat = self._start_chat()
 
-    @property
-    def config(self):
-        """Получаю конфигурацию из файла настроек"""
-        return j_loads(gs.path.src / "ai" / "gemini" / "config.json")
-
     def _start_chat(self):
-        """"""
+        """Запуск чата с начальной настройкой."""
         if self.system_instruction:
-             return self.model.start_chat(history=[{"role": "user", "parts": [self.system_instruction]}])
+            return self.model.start_chat(history=[{"role": "user", "parts": [self.system_instruction]}])
         else:
             return self.model.start_chat(history=[])
 
-    def _save_dialogue(self, dialogue: list):
+    def clear_history(self):
         """
-        Сохранить диалог в JSON файл.
+        Очищает историю чата в памяти и удаляет файл истории, если он существует.
         """
-        for message in dialogue:
-            j_dumps(data=message, file_path=self.history_json_file, mode="+a")
+        try:
+            self.chat_history = []  # Очистка истории в памяти
+            if self.history_json_file.exists():
+                self.history_json_file.unlink()  # Удаление файла истории
+                logger.info(f"Файл истории {self.history_json_file} удалён.")
+        except Exception as ex:
+            logger.error("Ошибка при очистке истории чата.", ex, False)
 
-    async def _save_chat_history(self):
+    async def _save_chat_history(self, chat_data_folder: Optional[str | Path]):
         """Сохраняет всю историю чата в JSON файл"""
+        if chat_data_folder:
+            self.history_json_file = Path(chat_data_folder, 'history.json')
         if self.chat_history:
             j_dumps(data=self.chat_history, file_path=self.history_json_file, mode="w")
 
-    async def _load_chat_history(self):
+    async def _load_chat_history(self, chat_data_folder: Optional[str | Path]):
         """Загружает историю чата из JSON файла"""
         try:
+            if chat_data_folder:
+                self.history_json_file = Path(chat_data_folder, 'history.json')
+
             if self.history_json_file.exists():
                 self.chat_history = j_loads(self.history_json_file)
                 self._chat = self._start_chat()
                 for entry in self.chat_history:
                     self._chat.history.append(entry)
-                logger.debug("История чата загружена из файла.", None, False)
+                logger.info(f"История чата загружена из файла. \n{self.history_json_file=}", None, False)
         except Exception as ex:
-            logger.error(f"Ошибка загрузки истории чата: ", ex, False)
+            logger.error(f"Ошибка загрузки истории чата из файла {self.history_json_file=}", ex, False)
+
+    async def chat(self, q: str, chat_data_folder: Optional[str | Path], flag: str = "save_chat") -> Optional[str]:
+        """
+        Обрабатывает чат-запрос с различными режимами управления историей чата.
+
+        Args:
+            q (str): Вопрос пользователя.
+            chat_data_folder (Optional[str | Path]): Папка для хранения истории чата.
+            flag (str): Режим управления историей. Возможные значения: 
+                        "save_chat", "read_and_clear", "clear", "start_new".
+
+        Returns:
+            Optional[str]: Ответ модели.
+        """
+        response = None
+        try:
+            if flag == "save_chat":
+                await self._load_chat_history(chat_data_folder)
+
+            if flag == "read_and_clear":
+                print(f"Прочитал историю чата и начал новый", text_color='gray')
+                await self._load_chat_history(chat_data_folder)
+                self.chat_history = []  # Очистить историю
+
+            if flag == "read_and_start_new":
+                print(f"Прочитал историю чата, сохранил и начал новый", text_color='gray')
+                await self._load_chat_history(chat_data_folder)
+                self.chat_history = []  # Очистить историю
+                flag = "start_new"
+                
+
+            elif flag == "clear":
+                print(f"Вытер прошлую историю")
+                self.chat_history = []  # Очистить историю
+                
+
+            elif flag == "start_new":
+                
+                timestamp = time.strftime("%Y%m%d_%H%M%S")
+                print(f"Сохранил прошлую историю в {timestamp}", text_color='gray')
+                archive_file = self.history_dir / f"history_{timestamp}.json"
+                if self.chat_history:
+                    j_dumps(data=self.chat_history, file_path=archive_file, mode="w")
+                self.chat_history = []  # Начать новую историю
+                
+
+
+            # Отправить запрос модели
+            response = await self._chat.send_message_async(q)
+            if response and response.text:
+                response_text = normalize_text(response.text)
+                response_text = remove_html_blocks(response_text)
+
+                self.chat_history.append({"role": "user", "parts": [q]})
+                self.chat_history.append({"role": "model", "parts": [response_text]})
+                await self._save_chat_history(chat_data_folder)
+                return response_text
+            else:
+                logger.error("Empty response in chat", None, False)
+                return
+
+        except Exception as ex:
+            logger.error(f"Ошибка чата:\n {response=}", ex, False)
+            return
+
+        finally:
+            if flag == "save_chat":
+                await self._save_chat_history(chat_data_folder)
+
+
 
     async def ask(self, q: str, attempts: int = 15) -> Optional[str]:
         """
@@ -151,7 +235,7 @@ class GoogleGenerativeAI:
                     )
                     time.sleep(2**attempt)
                     continue  # Повторить попытку
-
+                response_text = normalize_text(response.text)
                 response_text = remove_html_blocks(response.text)
                 messages = [
                     {"role": "user", "content": q},
@@ -211,29 +295,6 @@ class GoogleGenerativeAI:
                 return
 
         return
-
-    async def chat(self, q: str) -> Optional[str]:
-        """"""
-        response = None
-        try:
-            await self._load_chat_history()
-            content = { 'text': q }
-            response = await self._chat.send_message_async (q)
-            #response = await response.resolve()
-            if response and response.text:
-                response_text = remove_html_blocks(response.text)
-                self.chat_history.append({"role": "user", "parts": [q]})
-                self.chat_history.append({"role": "model", "parts": [response_text]})
-                self._save_dialogue(self.chat_history)
-                return response_text
-            else:
-                logger.error("Empty response in chat", None, False)
-                return
-        except Exception as ex:
-            logger.error(f"Ошибка чата:\n {response=}", ex, False)
-            return
-        finally:
-            await self._save_chat_history()
 
 
     async def describe_image(

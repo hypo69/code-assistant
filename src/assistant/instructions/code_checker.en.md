@@ -128,6 +128,7 @@ The structure of the response should be as follows:
 ## The response should not start with ```. Use them only for wrapping code blocks.
 
 ## You provide responses in Russian.  
-## Response Format: `.md` (Markdown)  
+## Response Format: `.md` (Markdown) 
+## Response encoding: `UTF-8`
 ----------------------------  
 **END OF INSTRUCTION**
